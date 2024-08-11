@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
 import { Message } from "./message";
-import { getRoomMessages } from "../http/get-room-message";
+import { getRoomMessages } from "../http/get-room-messages";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMessagesWebsockets } from "../hooks/use-messages-websocket";
 
 export function Messages() {
     const { roomId } = useParams()
@@ -22,6 +23,8 @@ export function Messages() {
     // Na queryKey temos que incluir todas as variavéis que estamos usando na queryFn
     // Caso tenhamos requisições acontecendo pra roomId diferentes, se eu não diferencio a sala no queryKey, eu acabo aproveitando o cache de uma sala dentro de outra sala
     // useSuspenseQuery porque eu envolvi esse componente com useSuspenseQuery
+
+    useMessagesWebsockets({roomId})
 
     return (
         <ol className="list-decimal list-outside px-3 space-y-8">
