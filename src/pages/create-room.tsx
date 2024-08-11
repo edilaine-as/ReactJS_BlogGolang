@@ -1,16 +1,26 @@
 import { useNavigate } from 'react-router-dom'
 import amaLogo from '../assets/ama-logo.svg'
 import { ArrowRight } from 'lucide-react'
+import { createRoom } from '../http/create.room'
+import { toast } from 'sonner'
 
 export function CreateRoom(){
     const navigate = useNavigate()
 
-    function handleCreateRoom(data: FormData){
+    async function handleCreateRoom(data: FormData){
         const theme = data.get('theme')?.toString()
 
-        console.log(theme)
+        if(!theme){
+            return
+        }
 
-        navigate('/room/1234')
+        try{
+            const { roomId } = await createRoom({theme})
+            
+            navigate(`/room/${roomId}`)
+        }catch{
+            toast.error('Falha ao criar sala!')
+        }
     }
 
     return (
